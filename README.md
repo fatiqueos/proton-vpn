@@ -1,144 +1,60 @@
-
-# Proton VPN Windows Uygulaması
-
-[Proton VPN](https://protonvpn.com) Windows uygulaması, tüm Proton VPN kullanıcıları için tasarlanmıştır — hem ücretsiz hem ücretli aboneler için.  
-Kullanıcı kaydı uygulama üzerinden değil, doğrudan web sitesinden yapılır.
+# ProtonVPN Windows Sürümü 
 
 ---
 
-## 📥 İndirme
-
-En güncel kararlı sürümü şu adreslerden indirebilirsiniz:
-
-- [Proton VPN Resmi Sitesi](https://protonvpn.com/download)  
-- [GitHub Releases](https://github.com/ProtonVPN/win-app/releases/latest)
-- [fatiqueos Releases](https://github.com/fatiqueos/proton-vpn/releases)
----
-
-## 🧩 Uygulama Bileşenleri
-
-Proton VPN Windows uygulaması aşağıdaki ana bileşenlerden oluşur:
-
-- **Proton VPN GUI (Arayüz) Uygulaması**  
-- **Proton VPN Windows Hizmeti**  
-- **OpenVPN**  
-- **TAP Adaptörü**  
-- **Split Tunnel (Bölünmüş Tünel) Callout Sürücüsü**
-
-### GUI Uygulaması
-
-- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>`  
-- Yürütülebilir Dosya: `ProtonVPN.exe`  
-- Log Dosyaları: `%LOCALAPPDATA%\ProtonVPN\Logs`  
-
-Uygulama açıldığında Proton VPN hizmetini başlatır, kapandığında ise durdurur.
-
-> **Not:** Debug modunda TLS sertifika pinning devre dışı bırakılabilir. Bunun için uygulama dizinine aşağıdaki gibi bir `ProtonVPN.config` dosyası eklenmelidir:
-
-```json
-{
-  "TlsPinningConfig": {}
-}
-```
+## ⚠️ ÖNEMLİ UYARI  
+**Lütfen uygulamayı güncellemeyin!**  
+Yeni sürümler bazı özelliklerin çalışmasını engelleyebilir. Mevcut sürümü kullanmaya devam etmeniz önerilir.
 
 ---
 
-### Proton VPN Hizmeti
+## 🚀 Öne Çıkan Özellikler
 
-- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>`  
-- Hizmet Adı: `ProtonVPN Service`  
-- Yürütülebilir Dosya: `ProtonVPNService.exe`  
-- Log Dosyaları: `%ALLUSERSPROFILE%\ProtonVPN\Logs`  
+### 1. Tam Türkçe Dil Desteği  
+- **Ayarlar > Language** menüsünden kolayca Türkçe’ye geçiş yapabilirsiniz.
 
-Windows hizmeti VPN bağlantısını yönetir, firewall ve split tunnel işlemlerini gerçekleştirir.  
-GUI uygulaması tarafından kontrol edilir.
+### 2. Manuel Sunucu Seçimi  
+- Boş (düşük doluluk oranlı) sunucuları manuel olarak seçme imkanı.  
+- Daha stabil ve hızlı bağlantı için tercih edebilirsiniz.
 
-**Hizmetin manuel kurulumu/kaldırılması için:**
+### 3. Otomatik Rastgele Sunucu Bağlantısı  
+- Ücretsiz sunucular arasında otomatik geçiş yaparak kesintisiz VPN deneyimi.
 
-```powershell
-ProtonVPNService.exe install    # Hizmeti kurar
-ProtonVPNService.exe uninstall  # Hizmeti kaldırır
-```
+### 4. Split Tunnel (Bölünmüş Tünel) Desteği  
+- VPN bağlantısı üzerinden hangi uygulamaların bağlanacağını seçebilirsiniz.  
+- Seçilmeyen uygulamalar normal internet bağlantısını kullanır.  
+- **Premium üyelik gerektirmez, tamamen ücretsizdir.**  
+- Güncel sürümlerde paralı olan bu özellik, bu versiyonda ücretsizdir.
 
----
-
-### OpenVPN
-
-Proton VPN bağlantısı OpenVPN protokolü kullanılarak sağlanır.
-
-- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>\Resources`  
-- Her bağlantı için yeni OpenVPN süreci başlatılır ve bağlantı kesildiğinde kapatılır.  
-- OpenVPN, Proton VPN’e özel TAP adaptörünü destekleyecek şekilde yamalanmıştır.  
-- OpenVPN yapılandırma dosyası statiktir.
-
-Kaynak kodu: [ProtonVPN/win-openvpn](https://github.com/ProtonVPN/win-openvpn)
+### 5. Windows 7 & Windows 8 Desteği  
+- Eski işletim sistemlerinde sorunsuz ve kararlı çalışma.
 
 ---
 
-### TAP Adaptörü
+## 📥 Kurulum & Kullanım
 
-- Adı: `TAP-ProtonVPN Windows Adapter V9`  
-- OpenVPN tarafından kullanılan sanal ağ adaptörüdür.  
-- Proton VPN’e özel olarak isimlendirilmiş ve modifiye edilmiştir.  
-
-Kaynak kodu: [ProtonVPN/win-tap-adapter](https://github.com/ProtonVPN/win-tap-adapter)
-
----
-
-### Split Tunnel ve DNS Leak Koruması (Callout Driver)
-
-- Adı: `ProtonVPN Callout Driver`  
-- VPN dışı arayüzlerden gelen DNS taleplerini engeller.  
-- Split Tunnel etkinleştirildiğinde trafik yönlendirmelerini yönetir.  
-- Kernel mod sürücüsü olarak çalışır ve VPN bağlantısına bağlı olarak başlatılır/durdurulur.
+1. Programı indirin ve kurun.  
+2. Ayarlar menüsünden “Language” seçeneği ile Türkçe’yi aktif edin.  
+3. Sunucu listesinden boş veya az dolu sunucuları manuel seçerek performansı artırabilirsiniz.  
+4. Ücretsiz sunucular arasında otomatik geçiş yapmak için “Rastgele Sunucu” seçeneğini kullanabilirsiniz.  
+5. Split Tunnel ayarlarıyla VPN’den geçecek uygulamaları belirleyin, diğerleri doğrudan internete bağlanır.
 
 ---
 
-## 📂 Proje Klasör Yapısı
+## ℹ️ Ek Bilgiler
 
-```plaintext
-ProtonVPN/
-├── ci/                        # CI/CD betikleri
-├── packages/                  # NuGet paketleri
-├── Setup/                     # Kurulum dosyaları ve kaynakları
-│   ├── Images/                # Kurulum görselleri
-│   ├── Installers/            # Oluşturulmuş yükleyiciler
-│   ├── ProtonVPNTap-SetupFiles/ # TAP sürücüsü kurulum dosyaları
-│   └── SplitTunnel/           # Callout sürücüsü
-├── src/                       # Proje kaynak kodları
-│   ├── bin/                   # Derleme çıktıları (silinebilir)
-│   └── srp/                   # ProtonMail SRP alt modülü
-├── test/                      # Test projeleri
-```
+- Bu sürüm, özellikle eski Windows sürümlerini desteklemek amacıyla optimize edilmiştir.  
+- Güncellemeler, bazı ücretsiz özelliklerin çalışmasını kısıtlayabilir, bu nedenle mevcut sürüm korunmalıdır.  
+- Split Tunnel özelliği, birçok kullanıcı için önemli bir avantaj sağlar ve bu versiyonda ücretsizdir.
 
 ---
 
-## 🛠️ Visual Studio Çözüm Projeleri
+## 🛡️ Güvenlik ve Performans
 
-| Proje Adı                   | Açıklama                                     |
-|-----------------------------|----------------------------------------------|
-| ProtonVPN.App               | Ana GUI uygulaması (WPF, MVVM)                |
-| ProtonVPN.Service           | Windows Hizmeti (VPN ve firewall yönetimi)   |
-| ProtonVPN.Core              | İş mantığı (business logic)                    |
-| ProtonVPN.Common            | Paylaşılan yardımcı sınıflar                   |
-| ProtonVPN.Resource          | Paylaşılan kaynaklar                            |
-| ProtonVPN.CalloutDriver     | Kernel modu split tunnel sürücüsü (C++)       |
-| ProtonVPN.IpFilter          | Windows firewall filtre kütüphanesi (C++)     |
-| ProtonVPN.TapInstaller      | TAP adaptör kurulum modülü                      |
-| ProtonVPN.TlsVerify         | VPN sunucu sertifika doğrulama aracı           |
-| ProtonVPN.Update            | Güncelleme modülü                              |
-| ProtonVPN.UpdateService     | Güncelleme hizmeti                             |
-| ProtonVPN.Native            | Windows API sarmalayıcı (C#)                   |
-| ProtonVPN.NetworkFilter     | Firewall yapılandırma sarmalayıcı (C#)         |
-| ProtonVPN.ErrorMessage      | Uygulama hata mesajları                         |
+- ProtonVPN’in sunduğu güçlü şifreleme ve gizlilik korumaları tam olarak desteklenmektedir.  
+- Düşük doluluklu sunucularla hızlı ve stabil bağlantı imkanı.  
+- VPN bağlantısının gereksiz uygulamalara yansımaması sayesinde internet performansınız korunur.
 
 ---
 
-## 📢 Katkıda Bulunma
-
-Katkı sağlamak veya sorun bildirmek için lütfen [GitHub Issues](https://github.com/ProtonVPN/win-app/issues) sayfasını kullanın.
-
----
-
-© 2023 Proton AG  
-Lisans bilgisi için [COPYING.md](COPYING.md) dosyasını inceleyin.
+**ProtonVPN Windows sürümünüzü en iyi şekilde kullanmak için lütfen bu sürümü koruyun ve güncelleme yapmaktan kaçının!**
