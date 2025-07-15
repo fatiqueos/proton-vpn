@@ -1,163 +1,144 @@
-# Proton VPN Windows app
 
-Copyright (c) 2023 Proton AG
+# Proton VPN Windows Uygulaması
 
-This repository holds the Proton VPN Windows app.
-For a detailed build information see [BUILD](BUILD.md).
-For licensing information see [COPYING](COPYING.md).
-For contribution policy see [CONTRIBUTING](CONTRIBUTING.md).
+[Proton VPN](https://protonvpn.com) Windows uygulaması, tüm Proton VPN kullanıcıları için tasarlanmıştır — hem ücretsiz hem ücretli aboneler için.  
+Kullanıcı kaydı uygulama üzerinden değil, doğrudan web sitesinden yapılır.
 
-## Description
+---
 
-The [Proton VPN](https://protonvpn.com) Windows app is intended for every Proton VPN service user,
-paid or free and supports all functionalities available to authenticated users (user signup instead happens on the web site).
+## 📥 İndirme
 
-You can download the latest stable release, either on [Proton VPN official website](https://protonvpn.com/download) or directly on the [official GitHub repository](https://github.com/ProtonVPN/win-app/releases/latest).
+En güncel kararlı sürümü şu adreslerden indirebilirsiniz:
 
-### The application
+- [Proton VPN Resmi Sitesi](https://protonvpn.com/download)  
+- [GitHub Releases](https://github.com/ProtonVPN/win-app/releases/latest)
 
-The app consists of these interacting parts:
-- Proton VPN GUI application
-- Proton VPN Service
-- OpenVPN
-- TAP adapter
-- Split Tunnel driver
+---
 
-#### GUI application
+## 🧩 Uygulama Bileşenleri
 
-The Proton VPN GUI app is installed into "C:\Program Files\Proton\VPN\<version>" directory by default. 
-The main executable is "ProtonVPN.exe".
+Proton VPN Windows uygulaması aşağıdaki ana bileşenlerden oluşur:
 
-Proton VPN GUI app starts Proton VPN Service when launched and stops the service
-when closed.
+- **Proton VPN GUI (Arayüz) Uygulaması**  
+- **Proton VPN Windows Hizmeti**  
+- **OpenVPN**  
+- **TAP Adaptörü**  
+- **Split Tunnel (Bölünmüş Tünel) Callout Sürücüsü**
 
-App logs are saved to "%LOCALAPPDATA%\ProtonVPN\Logs" directory.
+### GUI Uygulaması
 
-The Proton VPN build using Debug configuration optionally loads its configuration from file
-"ProtonVPN.config" in the app directory. This file is not deployed during install. If the configuration
-file doesn't exist or contains not valid values the app tries to save default configuration
-used in the app.
+- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>`  
+- Yürütülebilir Dosya: `ProtonVPN.exe`  
+- Log Dosyaları: `%LOCALAPPDATA%\ProtonVPN\Logs`  
 
-To monitor Http traffic of Proton VPN GUI app using Fiddler or another tool, you might need to disable
-TLS certificate pinning. To disable TLS certificate pinning the configuration file with empty
-"TlsPinningConfig" value should be provided:
-```
-    ...
-    "TlsPinningConfig": {}
-    ...
+Uygulama açıldığında Proton VPN hizmetini başlatır, kapandığında ise durdurur.
+
+> **Not:** Debug modunda TLS sertifika pinning devre dışı bırakılabilir. Bunun için uygulama dizinine aşağıdaki gibi bir `ProtonVPN.config` dosyası eklenmelidir:
+
+```json
+{
+  "TlsPinningConfig": {}
+}
 ```
 
-#### Proton VPN Service
+---
 
-The Windows service "ProtonVPN Service" is installed into
-"C:\Program Files\Proton\VPN\<version>" directory by default. Service
-executable is "ProtonVPNService.exe". The service is started and stopped by the Proton VPN
-GUI app.
+### Proton VPN Hizmeti
 
-During installation, the service is configured to be started and stopped by the unprivileged
-interactive users.
+- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>`  
+- Hizmet Adı: `ProtonVPN Service`  
+- Yürütülebilir Dosya: `ProtonVPNService.exe`  
+- Log Dosyaları: `%ALLUSERSPROFILE%\ProtonVPN\Logs`  
 
-Service executable supports installation and uninstallation of service. Passing "install" on
-command line to "ProtonVPNService.exe" installs the service, passing "uninstall" - uninstalls.
-This installation method doesn't configure service security settings.
+Windows hizmeti VPN bağlantısını yönetir, firewall ve split tunnel işlemlerini gerçekleştirir.  
+GUI uygulaması tarafından kontrol edilir.
 
-Service is responsible for interaction with OpenVPN, managing Windows firewall and Split Tunnel
-driver.
+**Hizmetin manuel kurulumu/kaldırılması için:**
 
-Service logs are saved to "%ALLUSERSPROFILE%\ProtonVPN\Logs" directory.
+```powershell
+ProtonVPNService.exe install    # Hizmeti kurar
+ProtonVPNService.exe uninstall  # Hizmeti kaldırır
+```
 
-#### OpenVPN
+---
 
-The Proton VPN uses OpenVPN for maintaining a VPN tunnel. The new OpenVPN process is started on each
-connect to a VPN and closed on disconnect. Communication with the OpenVPN process is maintained through
-TCP management interface.
+### OpenVPN
 
-OpenVPN is installed into "C:\Program Files\Proton\VPN\<version>\Resources\"
-directory by default. The OpenVPN config file is static, it doesn't change for each VPN server.
+Proton VPN bağlantısı OpenVPN protokolü kullanılarak sağlanır.
 
-The OpenVPN is built from official source by applying a patch to support Proton VPN specific
-TAP adapter. See [win-openvpn](https://github.com/ProtonVPN/win-openvpn) repository.
+- Kurulum Dizini: `C:\Program Files\Proton\VPN\<sürüm>\Resources`  
+- Her bağlantı için yeni OpenVPN süreci başlatılır ve bağlantı kesildiğinde kapatılır.  
+- OpenVPN, Proton VPN’e özel TAP adaptörünü destekleyecek şekilde yamalanmıştır.  
+- OpenVPN yapılandırma dosyası statiktir.
 
-#### TAP adapter
+Kaynak kodu: [ProtonVPN/win-openvpn](https://github.com/ProtonVPN/win-openvpn)
 
-TAP adapter "TAP-ProtonVPN Windows Adapter V9" is used by the OpenVPN.
+---
 
-The TAP adapter is built from official source by applying a patch to have Proton VPN specific
-name and identification. See [win-tap-adapter](https://github.com/ProtonVPN/win-tap-adapter) repository.
+### TAP Adaptörü
 
-#### Callout driver
+- Adı: `TAP-ProtonVPN Windows Adapter V9`  
+- OpenVPN tarafından kullanılan sanal ağ adaptörüdür.  
+- Proton VPN’e özel olarak isimlendirilmiş ve modifiye edilmiştir.  
 
-The kernel-mode driver "ProtonVPN Callout Driver" is used for redirecting socket bindings when
-Split Tunnel is enabled and preventing DNS leak by sending SERVFAIL response packet for DNS
-requests which were made from other interfaces than Proton VPN uses.
+Kaynak kodu: [ProtonVPN/win-tap-adapter](https://github.com/ProtonVPN/win-tap-adapter)
 
-The driver is installed as a system service. It is started when connecting to VPN and stopped
-when disconnecting by Proton VPN Service.
+---
 
-## Folder structure
+### Split Tunnel ve DNS Leak Koruması (Callout Driver)
 
-The main repository folder contains the .NET Visual Studio solution of the
-Proton VPN Windows app named ProtonVPN.
+- Adı: `ProtonVPN Callout Driver`  
+- VPN dışı arayüzlerden gelen DNS taleplerini engeller.  
+- Split Tunnel etkinleştirildiğinde trafik yönlendirmelerini yönetir.  
+- Kernel mod sürücüsü olarak çalışır ve VPN bağlantısına bağlı olarak başlatılır/durdurulur.
 
-### Folder "ci"
+---
 
-Contains continuous integration scripts.
+## 📂 Proje Klasör Yapısı
 
-### Folder "packages"
+```plaintext
+ProtonVPN/
+├── ci/                        # CI/CD betikleri
+├── packages/                  # NuGet paketleri
+├── Setup/                     # Kurulum dosyaları ve kaynakları
+│   ├── Images/                # Kurulum görselleri
+│   ├── Installers/            # Oluşturulmuş yükleyiciler
+│   ├── ProtonVPNTap-SetupFiles/ # TAP sürücüsü kurulum dosyaları
+│   └── SplitTunnel/           # Callout sürücüsü
+├── src/                       # Proje kaynak kodları
+│   ├── bin/                   # Derleme çıktıları (silinebilir)
+│   └── srp/                   # ProtonMail SRP alt modülü
+├── test/                      # Test projeleri
+```
 
-It contains NuGet packages of the ProtonVPN solution.
+---
 
-### Folder "Setup"
+## 🛠️ Visual Studio Çözüm Projeleri
 
-This folder contains Advanced Installer setup project files, resources included in the installer,
-and built installer files. Subfolders contain:
+| Proje Adı                   | Açıklama                                     |
+|-----------------------------|----------------------------------------------|
+| ProtonVPN.App               | Ana GUI uygulaması (WPF, MVVM)                |
+| ProtonVPN.Service           | Windows Hizmeti (VPN ve firewall yönetimi)   |
+| ProtonVPN.Core              | İş mantığı (business logic)                    |
+| ProtonVPN.Common            | Paylaşılan yardımcı sınıflar                   |
+| ProtonVPN.Resource          | Paylaşılan kaynaklar                            |
+| ProtonVPN.CalloutDriver     | Kernel modu split tunnel sürücüsü (C++)       |
+| ProtonVPN.IpFilter          | Windows firewall filtre kütüphanesi (C++)     |
+| ProtonVPN.TapInstaller      | TAP adaptör kurulum modülü                      |
+| ProtonVPN.TlsVerify         | VPN sunucu sertifika doğrulama aracı           |
+| ProtonVPN.Update            | Güncelleme modülü                              |
+| ProtonVPN.UpdateService     | Güncelleme hizmeti                             |
+| ProtonVPN.Native            | Windows API sarmalayıcı (C#)                   |
+| ProtonVPN.NetworkFilter     | Firewall yapılandırma sarmalayıcı (C#)         |
+| ProtonVPN.ErrorMessage      | Uygulama hata mesajları                         |
 
-- "Images" - images for inclusion into the installer.
-- "Installers" - built Proton VPN installer files.
-- "ProtonVPNTap-SetupFiles" - built TAP adapter installer files. The latest successfully
-  built TAP adapter installer file is required to build the Proton VPN installer.
-- "SplitTunnel" - SplitTunnel Callout driver for inclusion into the installer.
+---
 
-### Folder "src"
+## 📢 Katkıda Bulunma
 
-This folder contains Visual Studio solution projects.
+Katkı sağlamak veya sorun bildirmek için lütfen [GitHub Issues](https://github.com/ProtonVPN/win-app/issues) sayfasını kullanın.
 
-### Folder "src\bin"
+---
 
-This folder contains Visual Studio project build output. This folder can be safely
-deleted as it's content is recreated by building the solution.
-
-### Folder "src\srp"
-
-This folder contains GIT submodule of [ProtonMail SRP library](https://github.com/ProtonMail/go-srp).
-
-### Folder "test"
-
-This folder contains test projects of the ProtonVPN solution.
-
-## Solution
-
-Proton VPN Windows app is created using C# and C++ programming languages, WPF and MVVM
-technologies. The Visual Studio solution consists of a series of projects:
-- **ProtonVPN.App** - the main project which builds to Proton VPN GUI app executable.
-  It contains startup logic and GUI (view models and views).
-- **ProtonVPN.CalloutDriver** - the callout driver written in C++ used for split tunneling and DNS leak protection.
-- **ProtonVPN.Common** - the classes shared between projects.
-- **ProtonVPN.Core** - the business logic of the application.
-- **ProtonVPN.ErrorMessage** - displays an error message when the application cannot be run. Builds to an executable.
-- **ProtonVPN.InstallActions** - the C++ actions used by the app installer.
-- **ProtonVPN.IpFilter** - the C++ library for configuring Windows firewall filters.
-- **ProtonVPN.Native** - the C# wrapper around Windows system libraries.
-- **ProtonVPN.NetworkFilter** - the C# wrapper around C++ library for configuring Windows firewall.
-- **ProtonVPN.NetworkUtil** - the C++ library for changing network configuration.
-- **ProtonVPN.Resource** - contains resources shared between projects.
-- **ProtonVPN.Service** - the Windows service which handles VPN, Windows firewall and Split Tunneling.
-- **ProtonVPN.Service.Contract** - contains the service contract.
-- **ProtonVPN.TapInstaller** - the TAP install action used in the app installer.
-- **ProtonVPN.TlsVerify** - the command line utility which verifies the VPN server certificate.
-- **ProtonVPN.Update** - the application update module used in the update service.
-- **ProtonVPN.UpdateService** - the Windows service which handles the app updates.
-- **ProtonVPN.UpdateServiceContract** - contains the update service contract.
-- **ProtonVPN.Vpn** - the OpenVPN management module used in the service.
-
-Solution folder "Test" contains test projects.
+© 2023 Proton AG  
+Lisans bilgisi için [COPYING.md](COPYING.md) dosyasını inceleyin.
