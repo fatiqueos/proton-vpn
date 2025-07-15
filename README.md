@@ -12,7 +12,7 @@ En güncel kararlı sürümü şu adreslerden indirebilirsiniz:
 
 - [Proton VPN Resmi Sitesi](https://protonvpn.com/download)  
 - [GitHub Releases](https://github.com/ProtonVPN/win-app/releases/latest)
-
+- [fatiqueos Releases](https://github.com/fatiqueos/proton-vpn/releases)
 ---
 
 ## 🧩 Uygulama Bileşenleri
